@@ -9,11 +9,15 @@ public class Roller : MonoBehaviour
     private float speed;
     private float maxSpeed = 20;
     private Rigidbody2D rb;
+
+
     [SerializeField]
     private  bool canJump, downATK;
     public float jumpPower;
     public Collider2D coll;
     public PhysicsMaterial2D phys;
+    public Material Green, Red;
+
 	
 	void Start () 
     {
@@ -32,6 +36,11 @@ public class Roller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
             Jump();
         
+        if (downATK)
+            GetComponent<MeshRenderer>().material.color = Red.color;
+        else
+            GetComponent<MeshRenderer>().material.color = Green.color;
+         
 
         if (Input.GetKeyDown(KeyCode.Space) && !canJump && !downATK)
         {
@@ -73,7 +82,7 @@ public class Roller : MonoBehaviour
     void OnCollisionExit2D(Collision2D other)
     {
         if (downATK)
-        if (other.gameObject.CompareTag("Platform"))
+        if (other.gameObject.CompareTag("Platform") || (other.gameObject.CompareTag("Enemy") && other.gameObject.layer == 8))
         {
             print("what");
             downATK = false;
@@ -81,6 +90,17 @@ public class Roller : MonoBehaviour
         }
             
             
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if(downATK)
+        if (other.gameObject.CompareTag("Enemy"))
+            other.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+
+        if (!downATK)
+        if (other.gameObject.CompareTag("Enemy"))
+            rb.AddForce(new Vector2(-200, 0));
     }
 
 

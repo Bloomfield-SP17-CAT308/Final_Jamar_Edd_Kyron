@@ -8,7 +8,6 @@ public class CameraFollow : MonoBehaviour
 
     public Transform playerPos;
 
-
 	void Start () 
     {
         
