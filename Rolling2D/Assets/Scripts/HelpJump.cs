@@ -5,20 +5,18 @@ using UnityEngine;
 public class HelpJump : MonoBehaviour 
 {
 
-	
 
     private Rigidbody2D rb;
-   
     private  bool canJump, downATK;
     public Collider2D coll;
     public PhysicsMaterial2D phys;
     private float travelDis;
     private Animator anim;
-
+    private AudioSource auSo;
 
     void Start () 
     {
-       
+        auSo = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         canJump = true;
@@ -30,10 +28,7 @@ public class HelpJump : MonoBehaviour
 
     void Update()
     {
-
-      
-
-
+        
         if (downATK)
             anim.SetBool("Forcing", true);
         else
@@ -77,6 +72,10 @@ public class HelpJump : MonoBehaviour
         if (downATK)
         if (other.gameObject.CompareTag("Platform") || (other.gameObject.CompareTag("Enemy") ))
         {
+            if (other.gameObject.CompareTag("Platform"))
+            {
+                auSo.Play();
+            }
             downATK = false;
             coll.sharedMaterial = null;
         }

@@ -14,6 +14,10 @@ public class Roller : MonoBehaviour
     private Vector3 origPos;
     private bool alive;
 
+
+    public AudioClip hit, hurt, bounce;
+    private AudioSource auSo;
+
     [SerializeField]
     private  bool canJump, downATK;
     public float jumpPower;
@@ -24,10 +28,13 @@ public class Roller : MonoBehaviour
     public int lives;
     public GameObject[] lifes;
     private float travelDis;
+    public GameObject playAgain;
    
 	
 	void Start () 
     {
+        playAgain.SetActive(false);
+        auSo = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
         maxSpeed = 9;
         travelDis = 0;
@@ -128,7 +135,11 @@ public class Roller : MonoBehaviour
         if (downATK)
         if (other.gameObject.CompareTag("Platform") || (other.gameObject.CompareTag("Enemy") ))
         {
-           
+            if (other.gameObject.CompareTag("Platform"))
+            {
+                auSo.clip = bounce;
+                auSo.Play();
+            }
             downATK = false;
             coll.sharedMaterial = null;
         }
@@ -138,13 +149,19 @@ public class Roller : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if(downATK)
+        if (downATK)
         if (other.gameObject.CompareTag("Enemy"))
+        {
+            auSo.clip = hit;
+            auSo.Play();
             other.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+        }
 
         if (!downATK)
         if (other.gameObject.CompareTag("Enemy") && other.gameObject.GetComponent<Rigidbody2D>().constraints == RigidbodyConstraints2D.FreezeRotation)
         {
+            auSo.clip = hurt;
+            auSo.Play();
             if (lives == 0)
                 alive = false;
             rb.AddForce(new Vector2(-800, 0));
@@ -155,6 +172,8 @@ public class Roller : MonoBehaviour
 
         if (other.gameObject.CompareTag("Pothole"))
         {
+            auSo.clip = hurt;
+            auSo.Play();
             if (lives == 0)
                 alive = false;
             
@@ -169,6 +188,7 @@ public class Roller : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         distance.text = "Game Over";
+        playAgain.SetActive(true);
     }
 
 
