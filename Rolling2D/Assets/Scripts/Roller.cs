@@ -23,7 +23,6 @@ public class Roller : MonoBehaviour
     [SerializeField]
     public int lives;
     public GameObject[] lifes;
-    public Material Green, Red;
     private float travelDis;
    
 	
@@ -89,7 +88,7 @@ public class Roller : MonoBehaviour
         if(alive)
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
             Jump();
-
+        if(alive)
         if (Input.GetKeyDown(KeyCode.Space) && !canJump && !downATK)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0);

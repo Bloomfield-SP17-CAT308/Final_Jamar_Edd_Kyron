@@ -7,9 +7,11 @@ public class EnemyThing : MonoBehaviour
     public bool kicker;
     private Rigidbody2D rb;
     private bool canJump;
+    private Animator anim;
 
     void Start()
     {
+        anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         canJump = true;
     }
@@ -37,6 +39,9 @@ public class EnemyThing : MonoBehaviour
             
             if (!kicker && canJump)
                 rb.AddForce(new Vector2(0, 500));
+
+            if (kicker)
+                anim.SetTrigger("RollerNear");
         }
     }
 
