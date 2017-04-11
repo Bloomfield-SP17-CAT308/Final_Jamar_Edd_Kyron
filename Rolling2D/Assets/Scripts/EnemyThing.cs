@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class EnemyThing : MonoBehaviour 
 {
-    
+    public bool kicker;
+    private Rigidbody2D rb;
+    private bool canJump;
 
     void Start()
     {
-
+        rb = GetComponent<Rigidbody2D>();
+        canJump = true;
     }
 
     void Update()
     {
+        if (rb.IsTouchingLayers(1 << 8))
+            canJump = true;
+        else
+            canJump = false;
         if (gameObject.GetComponent<Rigidbody2D>().constraints == RigidbodyConstraints2D.None)
             StartCoroutine(expire());
     }
@@ -21,6 +28,22 @@ public class EnemyThing : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         Destroy(gameObject);
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && gameObject.GetComponent<Rigidbody2D>().constraints != RigidbodyConstraints2D.None )
+        {
+            
+            if (!kicker && canJump)
+                rb.AddForce(new Vector2(0, 500));
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Pothole"))
+            transform.position -= new Vector3(-1, 0, 0);
     }
 
 }

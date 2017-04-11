@@ -8,9 +8,11 @@ public class Roller : MonoBehaviour
 
     [SerializeField]
     private float speed;
-    private float maxSpeed = 9;
+    private float maxSpeed;
+    private Animator anim;
     private Rigidbody2D rb;
     private Vector3 origPos;
+    private bool alive;
 
     [SerializeField]
     private  bool canJump, downATK;
@@ -19,13 +21,18 @@ public class Roller : MonoBehaviour
     public PhysicsMaterial2D phys;
     public Text distance;
     [SerializeField]
-    private int lives;
+    public int lives;
     public GameObject[] lifes;
     public Material Green, Red;
-
+    private float travelDis;
+   
 	
 	void Start () 
     {
+        anim = GetComponent<Animator>();
+        maxSpeed = 9;
+        travelDis = 0;
+        alive = true;
         lifes = GameObject.FindGameObjectsWithTag("Life");
         lives = lifes.Length;
         origPos = transform.position;
@@ -35,31 +42,62 @@ public class Roller : MonoBehaviour
         coll = GetComponent<Collider2D>();
         downATK = false;
 
+
 	}
 	
-	
-	void Update () 
+    void Update()
+    {
+        
+        travelDis = transform.position.x - origPos.x;
+        if(alive)
+            distance.text = (int)(travelDis) + "";
+        else
+            StartCoroutine(GameOver());
+
+
+        if (downATK)
+            anim.SetBool("Forcing", true);
+        else
+            anim.SetBool("Forcing", false);
+        
+        if ((int)travelDis == 300)
+        {
+            maxSpeed++;
+            print("speed up!");
+        }
+        else if ((int)travelDis == 500)
+        {
+            maxSpeed++;
+            print("speed up!"); 
+        }
+        else if ((int)travelDis == 1000)
+        {
+            maxSpeed += 2;
+            print("ped");
+        }
+        else if (((int)travelDis) % 500 == 0)
+            maxSpeed += 3;
+
+    }
+
+	void FixedUpdate () 
     {
 
-        distance.text = (int)(transform.position.x - origPos.x) + "";
-       Roll(1);
+        if(alive)
+            Roll(1);
+
+        if(alive)
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
             Jump();
-        
-    
-         
 
         if (Input.GetKeyDown(KeyCode.Space) && !canJump && !downATK)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0);
-            rb.AddForce(new Vector2(0, -700));
+            rb.AddForce(new Vector2(0, -800));
             coll.sharedMaterial = phys;
             downATK = true;
         }
-
-
-
-
+           
         if (Input.GetKeyDown(KeyCode.Q))
             coll.sharedMaterial = null;
 
@@ -89,7 +127,7 @@ public class Roller : MonoBehaviour
     void OnCollisionExit2D(Collision2D other)
     {
         if (downATK)
-        if (other.gameObject.CompareTag("Platform") || (other.gameObject.CompareTag("Enemy") && other.gameObject.layer == 8))
+        if (other.gameObject.CompareTag("Platform") || (other.gameObject.CompareTag("Enemy") ))
         {
            
             downATK = false;
@@ -106,12 +144,32 @@ public class Roller : MonoBehaviour
             other.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
 
         if (!downATK)
-        if (other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Enemy") && other.gameObject.GetComponent<Rigidbody2D>().constraints == RigidbodyConstraints2D.FreezeRotation)
         {
+            if (lives == 0)
+                alive = false;
             rb.AddForce(new Vector2(-800, 0));
-            Destroy(lifes[lifes.Length-1]);
-            print(lifes.Length);
+            if (alive)
+                lives--;
         }
+
+
+        if (other.gameObject.CompareTag("Pothole"))
+        {
+            if (lives == 0)
+                alive = false;
+            
+            if (alive)
+                lives--;
+            
+        }
+    }
+
+
+    IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(3);
+        distance.text = "Game Over";
     }
 
 
