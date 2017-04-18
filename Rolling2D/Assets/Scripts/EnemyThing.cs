@@ -38,11 +38,19 @@ public class EnemyThing : MonoBehaviour
         {
             
             if (!kicker && canJump)
+            {
+                anim.SetBool("RollerNear", true);
                 rb.AddForce(new Vector2(0, 500));
+
+            }
 
             if (kicker)
                 anim.SetTrigger("RollerNear");
         }
+
+
+        if (!kicker && other.CompareTag("Platform"))
+            anim.SetBool("RollerNear", false);
     }
 
     void OnCollisionEnter2D(Collision2D other)

@@ -8,7 +8,7 @@ public class Roller : MonoBehaviour
 
     [SerializeField]
     private float speed;
-    private float maxSpeed;
+    public float maxSpeed;
     private Animator anim;
     private Rigidbody2D rb;
     private Vector3 origPos;
@@ -55,6 +55,8 @@ public class Roller : MonoBehaviour
     {
         
         travelDis = transform.position.x - origPos.x;
+
+       // print((int)travelDis + "/ 500" +  "" + (int)travelDis% 500);
         if(alive)
             distance.text = (int)(travelDis) + "";
         else
@@ -65,7 +67,7 @@ public class Roller : MonoBehaviour
             anim.SetBool("Forcing", true);
         else
             anim.SetBool("Forcing", false);
-        
+
         if ((int)travelDis == 300)
         {
             maxSpeed++;
@@ -82,8 +84,12 @@ public class Roller : MonoBehaviour
             print("ped");
         }
         else if (((int)travelDis) % 500 == 0)
+        {
             maxSpeed += 3;
+            print("speed");
+        }
 
+       
     }
 
 	void FixedUpdate () 
@@ -179,6 +185,8 @@ public class Roller : MonoBehaviour
             
             if (alive)
                 lives--;
+
+            other.gameObject.GetComponent<CircleCollider2D>().enabled = false;
             
         }
     }
@@ -191,5 +199,6 @@ public class Roller : MonoBehaviour
         playAgain.SetActive(true);
     }
 
+   
 
 }

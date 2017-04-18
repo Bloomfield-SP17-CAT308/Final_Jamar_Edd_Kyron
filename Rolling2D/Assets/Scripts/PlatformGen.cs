@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class PlatformGen : MonoBehaviour {
 
-    public GameObject street;
+    public GameObject street1;
+    public GameObject street2;
+    public GameObject street3;
     public GameObject enemy1;
     public GameObject enemy2;
     public GameObject hole;
     public GameObject healths;
     public Transform genPoint;
+    public GameObject checkP;
+
+    public float distance;
+    private Vector3 origPos;
     private GameObject enemy;
+    private GameObject street;
 
     private float platformWidth;
 
@@ -18,14 +25,19 @@ public class PlatformGen : MonoBehaviour {
 	void Start () 
     {
         enemy = enemy1;
+        street = street1;
+        origPos = GameObject.FindGameObjectWithTag("Player").transform.position;
         platformWidth = street.GetComponent<BoxCollider2D>().size.x;
 	}
 	
 	// Update is called once per frame
 	void Update () 
     {
+        distance = transform.position.x - origPos.x;
 
         chooseEnemy();
+        choosePlatform();
+
         if (transform.position.x < genPoint.position.x)
         {
             transform.position = new Vector3(transform.position.x + platformWidth, transform.position.y, transform.position.z);
@@ -50,5 +62,17 @@ public class PlatformGen : MonoBehaviour {
             enemy = enemy1;
         else
             enemy = enemy2;
+    }
+
+    void choosePlatform()
+    {
+        int pick = Random.Range(0, 3);
+
+        if (pick == 1)
+            street = street1;
+        if (pick == 2)
+            street = street2;
+        if (pick == 0)
+            street = street3;
     }
 }
