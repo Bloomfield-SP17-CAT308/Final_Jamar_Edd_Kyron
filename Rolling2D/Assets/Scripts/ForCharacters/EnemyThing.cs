@@ -5,6 +5,9 @@ using UnityEngine;
 public class EnemyThing : MonoBehaviour 
 {
     public bool kicker;
+    public float speed;
+
+
     private Rigidbody2D rb;
     private bool canJump;
     private Animator anim;

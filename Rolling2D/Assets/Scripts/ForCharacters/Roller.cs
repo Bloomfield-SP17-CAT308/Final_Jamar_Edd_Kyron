@@ -8,6 +8,9 @@ public class Roller : MonoBehaviour
 
     [SerializeField]
     private float speed;
+    [SerializeField]
+    private float currentSpeed;
+    private float nextSpeed;
     public float maxSpeed;
     private Animator anim;
     private Rigidbody2D rb;
@@ -33,6 +36,7 @@ public class Roller : MonoBehaviour
 	
 	void Start () 
     {
+        nextSpeed = 0;
         playAgain.SetActive(false);
         auSo = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
@@ -47,13 +51,24 @@ public class Roller : MonoBehaviour
         canJump = true;
         coll = GetComponent<Collider2D>();
         downATK = false;
-
-
+        currentSpeed = maxSpeed;
 	}
 	
     void Update()
     {
-        
+
+        if (Input.GetKeyDown(KeyCode.D) && Input.GetKeyDown(KeyCode.A))
+        {
+            maxSpeed += 2;
+            speed++;
+        }
+
+        if (Input.GetKeyDown(KeyCode.M) && Input.GetKeyDown(KeyCode.N))
+        {
+            lives = 0;
+        }
+
+
         travelDis = transform.position.x - origPos.x;
 
        // print((int)travelDis + "/ 500" +  "" + (int)travelDis% 500);
@@ -62,45 +77,14 @@ public class Roller : MonoBehaviour
         else
             StartCoroutine(GameOver());
 
-
-        if (downATK)
-            anim.SetBool("Forcing", true);
-        else
-            anim.SetBool("Forcing", false);
-
-        if ((int)travelDis == 300)
-        {
-            maxSpeed++;
-            print("speed up!");
-        }
-        else if ((int)travelDis == 500)
-        {
-            maxSpeed++;
-            print("speed up!"); 
-        }
-        else if ((int)travelDis == 1000)
-        {
-            maxSpeed += 2;
-            print("ped");
-        }
-        else if (((int)travelDis) % 500 == 0)
-        {
-            maxSpeed += 3;
-            print("speed");
-        }
-
-       
-    }
-
-	void FixedUpdate () 
-    {
-
-        if(alive)
-            Roll(1);
+        if (GControl.level == GameLevel.L3)
+            speed = 7f;
 
         if(alive)
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
             Jump();
+
+
         if(alive)
         if (Input.GetKeyDown(KeyCode.Space) && !canJump && !downATK)
         {
@@ -109,20 +93,73 @@ public class Roller : MonoBehaviour
             coll.sharedMaterial = phys;
             downATK = true;
         }
-           
-        if (Input.GetKeyDown(KeyCode.Q))
-            coll.sharedMaterial = null;
 
-        if (rb.velocity.x > maxSpeed)
-            rb.velocity = new Vector2(maxSpeed, rb.velocity.y);
 
+        if (downATK)
+            anim.SetBool("Forcing", true);
+        else
+            anim.SetBool("Forcing", false);
+        
+        if ((int)travelDis == 200)
+            GControl.level = GameLevel.L2;
+
+        if ((int)travelDis == 300)
+            GControl.level = GameLevel.L3;
+
+        if ((int)travelDis == 500)
+            GControl.level = GameLevel.L4;
+        if((int)travelDis == 1500)
+            GControl.level = GameLevel.L5;
+        
+        if ((int)travelDis == 300)
+        {
+            nextSpeed = currentSpeed + 2;
+            maxSpeed = nextSpeed;
+            print("speed: " + maxSpeed);
+        }
+        else if ((int)travelDis == 500)
+        {
+            nextSpeed = currentSpeed + 2;
+            maxSpeed = nextSpeed;
+            print("speed: " + maxSpeed);
+        }
+        else if (((int)travelDis) == 1000)
+        {
+            nextSpeed = currentSpeed + 5;
+            maxSpeed = nextSpeed;
+            print("speed: " + maxSpeed);
+        }
+        else if (((int)travelDis) % 500 == 0 && (int)travelDis > 100)
+        {
+            nextSpeed = currentSpeed + 2;
+            maxSpeed = nextSpeed;
+            print("speed: " + maxSpeed);
+        }
+        else
+            currentSpeed = maxSpeed;
+    }
+
+    void LevelOne()
+    {
+
+    }
+
+	void FixedUpdate () 
+    {
+
+        if(alive)
+            Roll(1);
 
         if (rb.IsTouchingLayers(1<<8))
             canJump = true;
         else
             canJump = false;
+        
+        if (Input.GetKeyDown(KeyCode.Q))
+            coll.sharedMaterial = null;
 
-
+        if (rb.velocity.x > maxSpeed)
+            rb.velocity = new Vector2(maxSpeed, rb.velocity.y);
 	}
 
     void Roll(float magnitude)
@@ -133,7 +170,6 @@ public class Roller : MonoBehaviour
     void Jump()
     {
         rb.AddForce(new Vector2(0, jumpPower));
-
     }
 
     void OnCollisionExit2D(Collision2D other)
@@ -192,10 +228,12 @@ public class Roller : MonoBehaviour
     }
 
 
+
+
     IEnumerator GameOver()
     {
         yield return new WaitForSeconds(3);
-        distance.text = "Game Over";
+        distance.text = "Game Over\n" + (int)travelDis;
         playAgain.SetActive(true);
     }
 
