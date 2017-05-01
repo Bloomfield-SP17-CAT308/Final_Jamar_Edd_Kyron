@@ -1,10 +1,11 @@
 fileFormatVersion: 2
 guid: 6ef264dbe6b670d4aa81a99868ce9852
-timeCreated: 1491931489
+timeCreated: 1493623863
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - bounceSound: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

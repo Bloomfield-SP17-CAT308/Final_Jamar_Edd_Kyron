@@ -5,19 +5,46 @@ using UnityEngine.SceneManagement;
 
 public class ButtonScript : MonoBehaviour 
 {
+    private AudioSource audiO;
+    public AudioClip bounceSound;
+     
+    void Awake()
+    {
+       
+        gameObject.AddComponent<AudioSource>();
+        audiO = GetComponent<AudioSource>();
+        audiO.playOnAwake = false;
+    }
+    void Start()
+    {
+        audiO.clip = bounceSound;
+    }
+
     public void toTitle()
     {
-        SceneManager.LoadScene(0);
+        audiO.Play();
+        StartCoroutine(WaitForAudio(0));
+          
     }
 
     public void toGame()
     {
-        SceneManager.LoadScene(1);
+        audiO.Play();
+        StartCoroutine(WaitForAudio(1));
+          
     }
 
     public void toHelp()
     {
-        SceneManager.LoadScene(2);
+        audiO.Play();
+        StartCoroutine(WaitForAudio(2));
+           
     }
 
+    IEnumerator WaitForAudio(int buildIndex)
+    {
+        yield return new WaitUntil(()=> audiO.isPlaying == false);
+        SceneManager.LoadScene(buildIndex);
+
+    }
 }

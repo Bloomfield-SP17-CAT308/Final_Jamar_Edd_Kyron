@@ -16,7 +16,7 @@ public class Roller : MonoBehaviour
     private Rigidbody2D rb;
     private Vector3 origPos;
     private bool alive;
-
+    private bool isPaused;
 
     public AudioClip hit, hurt, bounce;
     private AudioSource auSo;
@@ -27,6 +27,7 @@ public class Roller : MonoBehaviour
     public Collider2D coll;
     public PhysicsMaterial2D phys;
     public Text distance;
+    public Text pauseText;
     [SerializeField]
     public int lives;
     public GameObject[] lifes;
@@ -36,6 +37,8 @@ public class Roller : MonoBehaviour
 	
 	void Start () 
     {
+        pauseText.enabled = false;
+        isPaused = false;
         nextSpeed = 0;
         playAgain.SetActive(false);
         auSo = GetComponent<AudioSource>();
@@ -56,7 +59,7 @@ public class Roller : MonoBehaviour
 	
     void Update()
     {
-
+        
         if (Input.GetKeyDown(KeyCode.D) && Input.GetKeyDown(KeyCode.A))
         {
             maxSpeed += 2;
@@ -71,7 +74,12 @@ public class Roller : MonoBehaviour
 
         travelDis = transform.position.x - origPos.x;
 
-       // print((int)travelDis + "/ 500" +  "" + (int)travelDis% 500);
+       
+        if (Input.GetKeyDown(KeyCode.P))
+            Pause(!isPaused);
+
+
+        
         if(alive)
             distance.text = (int)(travelDis) + "";
         else
@@ -139,9 +147,21 @@ public class Roller : MonoBehaviour
             currentSpeed = maxSpeed;
     }
 
-    void LevelOne()
+    void Pause(bool paused)
     {
+        if (paused)
+        {
+            Time.timeScale = 0;
+            isPaused = true;
+            pauseText.enabled = true;
+        }
+        else
+        {
+            pauseText.enabled = false;
+            Time.timeScale = 1;
+            isPaused = false;
 
+        }
     }
 
 	void FixedUpdate () 
