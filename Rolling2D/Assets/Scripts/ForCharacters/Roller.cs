@@ -17,12 +17,14 @@ public class Roller : MonoBehaviour
     private Vector3 origPos;
     private bool alive;
     private bool isPaused;
+    private bool played = false;
 
-    public AudioClip hit, hurt, bounce;
+    public AudioClip hit, hurt, bounce, flat;
     private AudioSource auSo;
 
     [SerializeField]
-    private  bool canJump, downATK;
+    private  bool canJump;
+    public bool downATK;
     public float jumpPower;
     public Collider2D coll;
     public PhysicsMaterial2D phys;
@@ -80,10 +82,25 @@ public class Roller : MonoBehaviour
 
 
         
-        if(alive)
+        if (alive)
+        {
             distance.text = (int)(travelDis) + "";
+
+        }
         else
+        {
+            GameObject.FindGameObjectWithTag("SetUp").GetComponent<AudioSource>().Pause();
+
+            if (!auSo.isPlaying && !played)
+            {
+                auSo.clip = flat;
+                auSo.Play();
+                played = true;
+            }
+
             StartCoroutine(GameOver());
+
+        }
 
         if (GControl.level == GameLevel.L3)
             speed = 7f;
@@ -214,8 +231,8 @@ public class Roller : MonoBehaviour
         if (downATK)
         if (other.gameObject.CompareTag("Enemy"))
         {
-            auSo.clip = hit;
-            auSo.Play();
+           // auSo.clip = hit;
+           // auSo.Play();
             other.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         }
 

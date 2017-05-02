@@ -41,6 +41,11 @@ public class ButtonScript : MonoBehaviour
            
     }
 
+    public void toNext()
+    {
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Animator>().SetTrigger("Next");
+    }
+
     IEnumerator WaitForAudio(int buildIndex)
     {
         yield return new WaitUntil(()=> audiO.isPlaying == false);

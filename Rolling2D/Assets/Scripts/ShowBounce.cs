@@ -112,12 +112,6 @@ public class ShowBounce : MonoBehaviour
 
 
     }
-        
-
-
-
-
-
-
+       
 
 }

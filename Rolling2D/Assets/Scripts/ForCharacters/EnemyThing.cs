@@ -6,14 +6,17 @@ public class EnemyThing : MonoBehaviour
 {
     public bool kicker;
     public float speed;
+    public AudioClip hit; 
 
-
+    private AudioSource audiO;
     private Rigidbody2D rb;
     private bool canJump;
     private Animator anim;
 
     void Start()
     {
+        audiO = GetComponent<AudioSource>();
+        audiO.clip = hit;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         canJump = true;
@@ -60,6 +63,10 @@ public class EnemyThing : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Pothole"))
             transform.position -= new Vector3(-1, 0, 0);
+
+        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<Roller>().downATK)
+            audiO.Play();
+            
     }
 
 }

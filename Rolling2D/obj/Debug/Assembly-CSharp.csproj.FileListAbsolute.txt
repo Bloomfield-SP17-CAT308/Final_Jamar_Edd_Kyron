@@ -59,3 +59,4 @@ C:\Users\Edd\Documents\BC\GroupGame2\Final_Jamar_Edd_Kyron\Rolling2D\Temp\bin\De
 C:\Users\Edd\Documents\BC\GroupGame2\Final_Jamar_Edd_Kyron\Rolling2D\Temp\bin\Debug\UnityEngine.VR.xml
 C:\Users\Edd\Documents\BC\GroupGame2\Final_Jamar_Edd_Kyron\Rolling2D\obj\Debug\Assembly-CSharp.dll
 C:\Users\Edd\Documents\BC\GroupGame2\Final_Jamar_Edd_Kyron\Rolling2D\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Edd\Documents\BC\GroupGame2\Final_Jamar_Edd_Kyron\Rolling2D\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache

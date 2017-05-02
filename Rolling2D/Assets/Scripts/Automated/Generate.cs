@@ -32,20 +32,6 @@ public class Generate : MonoBehaviour {
 	}
 	
 
-  //  IEnumerator TimeSpanDifficultyChange()
- //   {
-        /*
-         while(alive)
-            if(startTime == 30)
-               
-         
-
-         
-         
-        
-    }
-        */
-	// Update is called once per frame
 	
     void Update ()
     {
